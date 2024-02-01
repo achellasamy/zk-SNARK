@@ -6,40 +6,44 @@ module ntt(x, w, clk, rst, y);
     input clk, rst;
     output logic [63:0] y [0:63];
 
-    logic [63:0] wout [0:63];
+    logic [63:0] wout;
     logic [63:0] ain;
     logic [7:0] win;
 
     integer count, j;
-    integer indexi, indexj;
+    integer indexi;
 
     genvar i;
 
     generate
         for(i = 0; i < 64; i = i + 1) begin
-            rowcalc rc (.clk(clk), .a(ain), .w(win), .out(wout[i]));
+            rowcalc rc (.clk(clk), .a(ain), .w(win), .out(wout));
         end
     endgenerate
 
     always @(negedge rst) begin
-        count = 0;
+        count <= 0;
+        indexi <= 0;
         ain <= x[0][0];
         win <= w[0][0];
         for(j = 0; j < 64; j = j + 1) begin
-            y[j] = 64'hXXXX_XXXX_XXXX_XXXX;
+            y[j] <= 64'hXXXX_XXXX_XXXX_XXXX;
         end
     end
 
     always @(posedge clk) begin
-        if(count == )
-        if(count == 71) begin
-            for(j = 0; j < 64; j = j + 1) begin
-                y[j] <= wout[j];
-            end
-            count = 0;
+        if(count > 7 && count < 71) begin
+            ain <= x[indexi][count - 7];
+            win <= w[indexi][count - 7];
+            count <= count + 1;
         end
-        else begin
-            count = count + 1;
+        else if(count == 71) begin
+            y[indexi] <= wout;
+            indexi <= indexi + 1;
+            count <= 0;
+        end
+        else if(count <= 7) begin
+            count <= count + 1;
         end
     end
 

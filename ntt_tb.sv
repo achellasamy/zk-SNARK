@@ -46,7 +46,7 @@ module ntt_tb();
         rst = 1'b0;
         #5;
         clk = 1'b0;
-        #400;
+        #10000;
     end
 
 endmodule
