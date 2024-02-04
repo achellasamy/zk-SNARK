@@ -35,9 +35,9 @@ module ntt_tb();
     
     initial begin
         for(i = 0; i < 64; i++) begin
+            cls.randomize();
+            x[i] = cls.xData();
             for(j = 0; j < 64; j++) begin
-                cls.randomize();
-                x[i][j] = cls.xData();
                 w[i][j] = cls.wOmega(i, j);
             end
         end
