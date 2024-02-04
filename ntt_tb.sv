@@ -17,7 +17,7 @@ endclass
 
 module ntt_tb();
 
-    logic [63:0] x [0:63][0:63];
+    logic [63:0] x [0:63];
     logic [63:0] y [0:63];
     logic [7:0] w [0:63][0:63];
     logic clk, rst;

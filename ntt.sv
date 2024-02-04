@@ -1,7 +1,7 @@
 
 module ntt(x, w, clk, rst, y);
 
-    input [63:0] x [0:63][0:63];
+    input [63:0] x [0:63];
     input [7:0] w [0:63][0:63];
     input clk, rst;
     output logic [63:0] y [0:63];
@@ -24,7 +24,7 @@ module ntt(x, w, clk, rst, y);
     always @(negedge rst) begin
         count <= 0;
         indexi <= 0;
-        ain <= x[0][0];
+        ain <= x[0];
         win <= w[0][0];
         for(j = 0; j < 64; j = j + 1) begin
             y[j] <= 64'hXXXX_XXXX_XXXX_XXXX;
@@ -33,7 +33,7 @@ module ntt(x, w, clk, rst, y);
 
     always @(posedge clk) begin
         if(count > 7 && count < 71) begin
-            ain <= x[indexi][count - 7];
+            ain <= x[count - 7];
             win <= w[indexi][count - 7];
             count <= count + 1;
         end
@@ -43,6 +43,8 @@ module ntt(x, w, clk, rst, y);
             count <= 0;
         end
         else if(count <= 7) begin
+            ain <= x[0];
+            win <= w[indexi][0];
             count <= count + 1;
         end
     end
