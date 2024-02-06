@@ -3,6 +3,8 @@ class NTTClass;
 
     rand logic [63:0] x;
 
+    constraint range  { 0 <= x <= 64'hffffffff00000000; }
+
     function logic [7:0] wOmega(input int i, input int j);
         logic [7:0] w;
         w = (i*j) % 64'hffffffff00000001;
@@ -11,6 +13,20 @@ class NTTClass;
                        
     function logic [63:0] xData();
         return x;
+    endfunction
+
+    function printData(input [63:0] data [0:63], input t);
+        int i;
+        if(t) begin
+            for(i = 0; i < 64; i++) begin
+                $display("x[%d] --> 0x%h", i, data[i]);
+            end
+        end
+        else begin
+            for(i = 0; i < 64; i++) begin
+                $display("y[%d] --> 0x%h", i, data[i]);
+            end
+        end
     endfunction
 
 endclass
@@ -34,6 +50,7 @@ module ntt_tb();
     end
     
     initial begin
+        $display("-------Start Test-------");
         for(i = 0; i < 64; i++) begin
             cls.randomize();
             x[i] = cls.xData();
@@ -41,12 +58,16 @@ module ntt_tb();
                 w[i][j] = cls.wOmega(i, j);
             end
         end
+        cls.printData(x, 1'b1);
         rst = 1'b1;
         #5;
         rst = 1'b0;
         #5;
         clk = 1'b0;
-        #715;
+        $display("------------------------");
+        #2000;
+        cls.printData(y, 1'b0);
+        $finish;
     end
 
 endmodule
