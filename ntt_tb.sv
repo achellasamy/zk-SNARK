@@ -59,11 +59,11 @@ module ntt_tb();
             end
         end
         cls.printData(x, 1'b1);
-        rst = 1'b1;
-        #5;
-        rst = 1'b0;
-        #5;
         clk = 1'b0;
+        rst = 1'b1;
+        #10;
+        rst = 1'b0;
+        #10;
         $display("------------------------");
         #2000;
         cls.printData(y, 1'b0);

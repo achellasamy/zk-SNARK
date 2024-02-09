@@ -20,16 +20,15 @@ module ntt(x, w, clk, rst, y);
         end
     endgenerate
 
-    always @(negedge rst) begin
-        count <= 0;
-        ain <= x[0];
-        for(j = 0; j < 64; j = j + 1) begin
-            win[j] <= w[j][0];
+    always_ff @(posedge clk) begin
+        if(rst) begin
+            count <= 0;
+            ain <= x[0];
+            for(j = 0; j < 64; j = j + 1) begin
+                win[j] <= w[j][0];
+            end
         end
-    end
-
-    always @(posedge clk) begin
-        if(count > 7 && count < 71) begin
+        else if(count > 7 && count < 71) begin
             ain <= x[count - 7];
             for(j = 0; j < 64; j = j + 1) win[j] <= w[j][count - 7];
             count <= count + 1;
