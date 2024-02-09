@@ -53,10 +53,10 @@ module ntt_bram
             if(countery < 64) begin
                 BRAM_din <= yData[countery];
                 nttrst <= 1'b1;
-                counterx <= counterx + 1;
+                countery <= countery + 1;
             end
             else begin
-                counterx <= 0;
+                countery <= 0;
             end
         end
     end
