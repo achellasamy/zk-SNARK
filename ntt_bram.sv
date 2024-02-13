@@ -2,7 +2,7 @@ module ntt_bram
     (
         input clk,
         input rst,
-        output [11:0] BRAM_addr,
+        output [12:0] BRAM_addr,
         output BRAM_clk,
         output logic [63:0] BRAM_din,
         input [63:0] BRAM_dout,
