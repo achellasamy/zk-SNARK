@@ -7,7 +7,6 @@ module ntt_top();
     logic [63:0] BRAM_din;
     logic [63:0] BRAM_dout;
     logic BRAM_en;
-    logic BRAM_rst;
     logic BRAM_we;
 
     ntt_bram ntt_bram_i
@@ -19,7 +18,6 @@ module ntt_top();
             .BRAM_din(BRAM_din),
             .BRAM_dout(BRAM_dout),
             .BRAM_en(BRAM_en),
-            .BRAM_rst(BRAM_rst),
             .BRAM_we(BRAM_we)
         );
 
@@ -30,7 +28,6 @@ module ntt_top();
             .BRAM_PORTB_0_din(BRAM_din),
             .BRAM_PORTB_0_dout(BRAM_dout),
             .BRAM_PORTB_0_en(BRAM_en),
-            .BRAM_PORTB_0_rst(BRAM_rst),
             .BRAM_PORTB_0_we(BRAM_we),
             .peripheral_aresetn(rstn),
             .pl_clk0(clk)
