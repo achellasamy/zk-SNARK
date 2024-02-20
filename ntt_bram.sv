@@ -28,9 +28,6 @@ module ntt_bram
             nttrst <= 1'b1;
             sentx <= 1'b0;
             sentw <= 1'b0;
-            for(i = 0; i < 64; i = i + 1) begin
-                xData[i] <= 64'hXXXX_XXXX_XXXX_XXXX;
-            end
         end
         else if(!done && !sentx) begin
             if(counterx < 64) begin
@@ -65,9 +62,6 @@ module ntt_bram
     always_ff @(posedge clk) begin
         if(rst) begin
             countery <= 0;
-            for(i = 0; i < 64; i = i + 1) begin
-                yData[i] <= 64'hXXXX_XXXX_XXXX_XXXX;
-            end
         end
         else if(done) begin
             if(countery < 64) begin
