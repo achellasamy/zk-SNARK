@@ -34,6 +34,8 @@ module ntt_bram_tb();
     logic [63:0]BRAM_PORTB_0_dout;
     logic BRAM_PORTB_0_en;
     logic [0:0]BRAM_PORTB_0_we;
+    
+    int address;
 
     logic [63:0] y [0:63];
 
@@ -71,35 +73,36 @@ module ntt_bram_tb();
         $display("-----Begin NTT_BRAM Test-----");
         rst = 1'b1;
         clk = 1'b0;
-
-        #10;
         BRAM_en = 1'b1;
+
+        #20;
         fillBRAM();
-        readBRAM();
-        #10;
+        #20;
+        rst = 1'b0;
+        #800;
         
         $finish;
     end
 
     task fillBRAM();
         BRAM_we = 1'b1;
+        address = 64;
         #5
         for(int i = 0; i < 64; i++) begin
-            BRAM_addr = i << 2;
+            BRAM_addr = i;
             cls.randomize();
             BRAM_din = cls.xData();
-            #10;
+            #20;
+        end
+        for(int i = 0; i < 64; i++) begin
+            for(int j = 0; j < 64; j++) begin
+                BRAM_addr = address;
+                BRAM_din = cls.wOmega(i, j);
+                address = address + 1;
+                #20;
+            end
         end
         BRAM_we = 1'b0;
-    endtask
-
-    task readBRAM();
-        #10;
-        for(int i = 0; i < 64; i++) begin
-            BRAM_addr = i << 2;
-            $display("BRAM[%d] --> %h", i << 2, BRAM_dout);
-            #10;
-        end
     endtask
 
 
