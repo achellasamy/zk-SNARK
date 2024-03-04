@@ -1,7 +1,7 @@
 
 module ntt_top();
 
-    logic clk, rst;
+    logic clk, rst, done;
     logic [12:0] BRAM_addr;
     logic BRAM_clk;
     logic [63:0] BRAM_din;
@@ -18,7 +18,8 @@ module ntt_top();
             .BRAM_din(BRAM_din),
             .BRAM_dout(BRAM_dout),
             .BRAM_en(BRAM_en),
-            .BRAM_we(BRAM_we)
+            .BRAM_we(BRAM_we),
+            .ntt_done(done)
         );
 
     NTT_wrapper_wrapper ntt_wrapper_wrapper_i
@@ -29,8 +30,9 @@ module ntt_top();
             .BRAM_PORTB_0_dout(BRAM_dout),
             .BRAM_PORTB_0_en(BRAM_en),
             .BRAM_PORTB_0_we(BRAM_we),
-            .peripheral_aresetn(rstn),
-            .pl_clk0(clk)
+            .pl_clk0(clk),
+            .zynq_ntt_rst(rst),
+            .zynq_ntt_done(done)
         );
 
 endmodule
