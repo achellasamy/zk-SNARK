@@ -6,6 +6,9 @@
 #define MODULUS 998244353  // A prime modulus for NTT
 #define PRIMITIVE_ROOT 3   // A primitive root for the chosen modulus
 
+__uint64_t P = 0xFFFFFFFF00000001;
+__uint8_t W [64][64];
+
 int mod_pow(int base, int exp, int mod);
 void ntt(int *a, int n, int root);
 
@@ -20,45 +23,52 @@ int main() {
 	char *outputname = "outputNTT.txt";
 	FILE *fp = fopen(filename, "r");
 	FILE *out = fopen(outputname, "w");
-	
-	if (fp == NULL)
-    {
-        printf("Error: could not open file %s", filename);
-        return 1;
-    }
-	
-	char line[256];
-    while (fgets(line, sizeof(line), fp) != NULL) {
-        
-        // Split the line into an array of coefficients
-        int read[4];
-		int P[64];
-        int j = 0;
 
-        //modifying code for 64 elements in one line - incomplete
-		while(j < 64) {
-            if (sscanf(line, "{%d, %d, %d, %d}\n", &read[0], &read[1], &read[2], &read[3]) == 4) {
-                for(int i = 0; i < 4; i++)
-                    P[i + j] = (double) read[i];
-                j += 4;
-            } 
-            else {
-                printf("Error parsing P from line: %s\n", line);
-                return 1;
-            }
+    //Omega Value Generation
+    for(int i = 0; i < 64; i++){
+        for(int j = 0; j < 64; j++){
+            W[i][j] = (i*j) % P;
         }
-        int root = mod_pow(PRIMITIVE_ROOT, (MODULUS - 1) / 4, MODULUS);
-        ntt(P, 4, root);
-
-        fprintf(out, "{%d + 0i, %d + 0i, %d + 0i, %d + 0i}\n",P[0], P[1], P[2], P[3]);
     }
 	
-	end_time = clock();
-	elapsed_time = (double)(end_time - start_time) / CLOCKS_PER_SEC;
-	printf("Program execution time: %f seconds\n", elapsed_time);
+	// if (fp == NULL)
+    // {
+    //     printf("Error: could not open file %s", filename);
+    //     return 1;
+    // }
 	
-	fclose(fp);
-	fclose(out);
+	// char line[256];
+    // while (fgets(line, sizeof(line), fp) != NULL) {
+        
+    //     // Split the line into an array of coefficients
+    //     int read[4];
+	// 	int P[64];
+    //     int j = 0;
+
+    //     //modifying code for 64 elements in one line - incomplete
+	// 	while(j < 64) {
+    //         if (sscanf(line, "{%d, %d, %d, %d}\n", &read[0], &read[1], &read[2], &read[3]) == 4) {
+    //             for(int i = 0; i < 4; i++)
+    //                 P[i + j] = (double) read[i];
+    //             j += 4;
+    //         } 
+    //         else {
+    //             printf("Error parsing P from line: %s\n", line);
+    //             return 1;
+    //         }
+    //     }
+    //     int root = mod_pow(PRIMITIVE_ROOT, (MODULUS - 1) / 4, MODULUS);
+    //     ntt(P, 4, root);
+
+    //     fprintf(out, "{%d + 0i, %d + 0i, %d + 0i, %d + 0i}\n",P[0], P[1], P[2], P[3]);
+    // }
+	
+	// end_time = clock();
+	// elapsed_time = (double)(end_time - start_time) / CLOCKS_PER_SEC;
+	// printf("Program execution time: %f seconds\n", elapsed_time);
+	
+	// fclose(fp);
+	// fclose(out);
 
     return 0;
 }
