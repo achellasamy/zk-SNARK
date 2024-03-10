@@ -2,27 +2,48 @@
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
+#include <inttypes.h>
 
-#define MODULUS 998244353  // A prime modulus for NTT
-#define PRIMITIVE_ROOT 3   // A primitive root for the chosen modulus
+#define ROWS 64
+#define COLS 64
 
-__uint64_t P = 0xFFFFFFFF00000001;
-__uint8_t W [64][64];
-
-int mod_pow(int base, int exp, int mod);
-void ntt(int *a, int n, int root);
+//global variables
+uint64_t P = 0xFFFFFFFF00000001; //Prime P
 
 int main() {
 	
 	clock_t start_time, end_time;
 	double elapsed_time;
-	
 	start_time = clock();
-	
-	char *filename = "polynomials.txt";
-	char *outputname = "outputNTT.txt";
-	FILE *fp = fopen(filename, "r");
-	FILE *out = fopen(outputname, "w");
+
+    FILE *file = fopen("polynomials64x64.txt", "r");
+    if (file == NULL) {
+        perror("Error opening file");
+        return 1;
+    }
+
+    //Array storing polynomial values (x values)
+    uint64_t inputArray[ROWS][COLS];
+
+    //Array storing output of NTT (y values)
+    uint64_t outputArray[ROWS][COLS];
+
+    // Read the values from the file into the array
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLS; j++) {
+            if (fscanf(file, "%" SCNu64, &inputArray[i][j]) != 1) {
+                fprintf(stderr, "Error reading file at row %d, column %d\n", i+1, j+1);
+                fclose(file);
+                return 1;
+            }
+        }
+    }
+
+    // Close the file
+    fclose(file);
+
+    //Omega Value Array
+    uint64_t W [64][64];
 
     //Omega Value Generation
     for(int i = 0; i < 64; i++){
@@ -30,85 +51,38 @@ int main() {
             W[i][j] = (i*j) % P;
         }
     }
-	
-	// if (fp == NULL)
-    // {
-    //     printf("Error: could not open file %s", filename);
-    //     return 1;
-    // }
-	
-	// char line[256];
-    // while (fgets(line, sizeof(line), fp) != NULL) {
-        
-    //     // Split the line into an array of coefficients
-    //     int read[4];
-	// 	int P[64];
-    //     int j = 0;
 
-    //     //modifying code for 64 elements in one line - incomplete
-	// 	while(j < 64) {
-    //         if (sscanf(line, "{%d, %d, %d, %d}\n", &read[0], &read[1], &read[2], &read[3]) == 4) {
-    //             for(int i = 0; i < 4; i++)
-    //                 P[i + j] = (double) read[i];
-    //             j += 4;
-    //         } 
-    //         else {
-    //             printf("Error parsing P from line: %s\n", line);
-    //             return 1;
-    //         }
-    //     }
-    //     int root = mod_pow(PRIMITIVE_ROOT, (MODULUS - 1) / 4, MODULUS);
-    //     ntt(P, 4, root);
-
-    //     fprintf(out, "{%d + 0i, %d + 0i, %d + 0i, %d + 0i}\n",P[0], P[1], P[2], P[3]);
-    // }
-	
-	// end_time = clock();
-	// elapsed_time = (double)(end_time - start_time) / CLOCKS_PER_SEC;
-	// printf("Program execution time: %f seconds\n", elapsed_time);
-	
-	// fclose(fp);
-	// fclose(out);
-
-    return 0;
-}
-
-int mod_pow(int base, int exp, int mod) {
-    int result = 1;
-    while (exp > 0) {
-        if (exp % 2 == 1) {
-            result = (result * (long long)base) % mod;
-        }
-        base = (base * (long long)base) % mod;
-        exp /= 2;
-    }
-    return result;
-}
-
-void ntt(int *a, int n, int root) {
-    // Bit-reverse permutation
-    int i, j, k;
-    for (i = 0, j = 1; j < n - 1; j++) {
-        for (k = n >> 1; k > (i ^= k); k >>= 1);
-        if (j < i) {
-            int temp = a[i];
-            a[i] = a[j];
-            a[j] = temp;
-        }
-    }
-
-    // NTT
-    for (int m = 1; m < n; m *= 2) {
-        int w_m = mod_pow(root, (MODULUS - 1) / (2 * m), MODULUS);
-        for (int k = 0; k < n; k += 2 * m) {
-            int w = 1;
-            for (int j = 0; j < m; j++) {
-                int u = a[k + j];
-                int v = (w * (long long)a[k + j + m]) % MODULUS;
-                a[k + j] = (u + v) % MODULUS;
-                a[k + j + m] = (u - v + MODULUS) % MODULUS;
-                w = (w * (long long)w_m) % MODULUS;
+    //NTT Calculation
+    for(int i = 0; i < 64; i++) {
+        for(int j = 0; j < ROWS; j++) {
+            uint64_t sum = 0;
+            for(int k = 0; k < COLS; k++) {
+                uint64_t temp;
+                temp = (inputArray[j][k] * W[j][k]) % P;
+                sum = (sum + temp) % P;
             }
+            outputArray[i][j] = sum;
         }
     }
+
+    //Print output array to file
+    char *outputname = "outputNTT64x64.txt";
+    FILE *out = fopen(outputname, "w");
+
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLS; j++) {
+            fprintf(out, "%" PRIu64 " ", outputArray[i][j]);
+        }
+        fprintf(out, "\n");
+    }
+/*
+    // Printing the content of the array (for verification)
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLS; j++) {
+            printf("%" PRIu64 " ", outputArray[i][j]);
+        }
+        printf("\n");
+    }	
+*/
+    return 0;
 }
