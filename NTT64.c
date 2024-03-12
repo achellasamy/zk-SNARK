@@ -58,7 +58,7 @@ int main() {
             uint64_t sum = 0;
             for(int k = 0; k < COLS; k++) {
                 uint64_t temp;
-                temp = (inputArray[j][k] * W[j][k]) % P;
+                temp = (inputArray[j][k] << W[j][k]) % P;
                 sum = (sum + temp) % P;
             }
             outputArray[i][j] = sum;
@@ -71,7 +71,7 @@ int main() {
 
     for (int i = 0; i < ROWS; i++) {
         for (int j = 0; j < COLS; j++) {
-            fprintf(out, "%" PRIu64 " ", outputArray[i][j]);
+            fprintf(out, "%lX, ", outputArray[i][j]);
         }
         fprintf(out, "\n");
     }
