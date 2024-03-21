@@ -58,7 +58,7 @@ int main() {
             uint64_t sum = 0;
             for(int k = 0; k < COLS; k++) {
                 uint64_t temp;
-                temp = (inputArray[j][k] << W[j][k]) % P;
+                temp = (inputArray[j][k] * W[j][k]) % P;
                 sum = (sum + temp) % P;
             }
             outputArray[i][j] = sum;
@@ -71,10 +71,17 @@ int main() {
 
     for (int i = 0; i < ROWS; i++) {
         for (int j = 0; j < COLS; j++) {
-            fprintf(out, "%lX, ", outputArray[i][j]);
+            fprintf(out, "%" PRIu64 " ", outputArray[i][j]);
         }
         fprintf(out, "\n");
     }
+
+    end_time = clock();
+    elapsed_time = end_time - start_time;
+    //elapsed_time = (double)(end_time - start_time) / CLOCKS_PER_SEC;
+
+    printf("Clocks per second: %d\n,", CLOCKS_PER_SEC);
+    printf("Elapsed time: %f\n", elapsed_time);
 /*
     // Printing the content of the array (for verification)
     for (int i = 0; i < ROWS; i++) {
