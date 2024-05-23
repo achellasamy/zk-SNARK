@@ -36,11 +36,11 @@ module ntt_tb();
     logic [63:0] x [0:63];
     logic [63:0] y [0:63];
     logic [7:0] w [0:63][0:63];
-    logic clk, rst;
+    logic clk, rst, done;
 
     int i, j;
 
-    ntt UUT (.x(x), .w(w), .clk(clk), .rst(rst), .y(y));
+    ntt UUT (.x(x), .w(w), .clk(clk), .rst(rst), .y(y), .done(done));
     
     NTTClass cls = new();
     

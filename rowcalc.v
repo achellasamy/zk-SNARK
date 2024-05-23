@@ -36,5 +36,8 @@ module rowcalc(
             result <= result + aw;
     end
 
+    fast_mod m2 (.a(result[127:96]), .b(result[95:64]), .c(result[63:32]), 
+                 .d(result[31:0]), .clk(clk), .z(out));
+
 endmodule
 

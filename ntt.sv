@@ -1,10 +1,11 @@
 
-module ntt(x, w, clk, rst, y);
+module ntt(x, w, clk, rst, y, done);
 
     input [63:0] x [0:63];
     input [7:0] w [0:63][0:63];
     input clk, rst;
     output logic [63:0] y [0:63];
+    output logic done;
 
     logic [63:0] wout [0:63];
     logic [63:0] ain;
@@ -23,6 +24,7 @@ module ntt(x, w, clk, rst, y);
     always_ff @(posedge clk) begin
         if(rst) begin
             count <= 0;
+            done <= 1'b0;
             ain <= x[0];
             for(j = 0; j < 64; j = j + 1) begin
                 win[j] <= w[j][0];
@@ -36,6 +38,7 @@ module ntt(x, w, clk, rst, y);
         else if(count == 71) begin
             for(j = 0; j < 64; j = j + 1) y[j] <= wout[j];
             count <= 0;
+            done <= 1'b1;
         end
         else if(count <= 7) begin
             ain <= x[0];

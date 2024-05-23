@@ -6,6 +6,7 @@ module ntt_bram_fixed
         output BRAM_clk_0,
         output logic [63:0] BRAM_din_0,
         input [63:0] BRAM_dout_0,
+        output BRAM_rst_0,
         output BRAM_en_0,
         output BRAM_we_0,
         output logic ntt_done
@@ -90,6 +91,7 @@ module ntt_bram_fixed
     assign BRAM_addr_0 = address_0 << 2;
     assign BRAM_clk_0 = clk;
     assign BRAM_en_0 = 1;
-    assign BRAM_we_0 = done;
+    assign BRAM_rst_0 = 1'b0;
+    assign BRAM_we_0 = {4{done}};
 
 endmodule
