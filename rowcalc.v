@@ -1,3 +1,7 @@
+/* Adapted From Hartshorn, 
+Austin J, et al. Number Theoretic Transform (ntt) 
+Fpga Accelerator. : Worcester Polytechnic Institute, 2020.*/
+
 module rowcalc(
     input clk,
     input [63:0] a,

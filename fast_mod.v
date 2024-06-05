@@ -1,3 +1,7 @@
+/* Adapted From Hartshorn, 
+Austin J, et al. Number Theoretic Transform (ntt) 
+Fpga Accelerator. : Worcester Polytechnic Institute, 2020.*/
+
 // compute (2^32)(b+c)-a-b+d mod p
 // pipeline into two stages
 // checks for overflow

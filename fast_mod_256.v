@@ -1,3 +1,7 @@
+/* Adapted From Hartshorn, 
+Austin J, et al. Number Theoretic Transform (ntt) 
+Fpga Accelerator. : Worcester Polytechnic Institute, 2020.*/
+
 module fast_mod_256(
     input [31:0] a,
     input [31:0] b,

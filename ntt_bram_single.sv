@@ -1,3 +1,6 @@
+//NTT BRAM Module
+//NO FIXED OMEGA VALUES
+
 module ntt_bram_single
     (
         input clk,

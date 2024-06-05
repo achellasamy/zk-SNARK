@@ -1,3 +1,5 @@
+//Main NTT compute module
+//Contains rowcalcs
 
 module ntt(x, w, clk, rst, y, done);
 
